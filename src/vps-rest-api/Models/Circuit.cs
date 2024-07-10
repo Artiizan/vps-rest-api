@@ -31,7 +31,7 @@ public class Circuit
     [Column(TypeName = "decimal(9, 6)")]
     public decimal lng { get; set; }
 
-    public int alt { get; set; }
+    public int? alt { get; set; }
 
     [Url]
     public string? url { get; set; }

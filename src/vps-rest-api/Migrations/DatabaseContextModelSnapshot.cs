@@ -20,10 +20,9 @@ namespace vpsrestapi.Migrations
             modelBuilder.Entity("Models.Circuit", b =>
                 {
                     b.Property<int>("circuitId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("alt")
+                    b.Property<int?>("alt")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("circuitRef")
@@ -63,16 +62,13 @@ namespace vpsrestapi.Migrations
             modelBuilder.Entity("Models.Driver", b =>
                 {
                     b.Property<int>("driverId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("code")
-                        .IsRequired()
-                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("dob")
-                        .HasColumnType("date");
+                        .HasColumnType("Date");
 
                     b.Property<string>("driverRef")
                         .IsRequired()
@@ -90,8 +86,6 @@ namespace vpsrestapi.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("number")
-                        .IsRequired()
-                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("surname")
@@ -110,38 +104,41 @@ namespace vpsrestapi.Migrations
             modelBuilder.Entity("Models.DriverStanding", b =>
                 {
                     b.Property<int>("driverStandingsId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("driverId")
+                    b.Property<int?>("driverId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<float>("points")
+                    b.Property<float?>("points")
                         .HasColumnType("REAL");
 
-                    b.Property<int>("position")
+                    b.Property<int?>("position")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("positionText")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("raceId")
+                    b.Property<int?>("raceId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("wins")
+                    b.Property<int?>("wins")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("driverStandingsId");
+
+                    b.HasIndex("driverId");
+
+                    b.HasIndex("raceId");
 
                     b.ToTable("DriverStandings");
                 });
 
             modelBuilder.Entity("Models.LapTime", b =>
                 {
-                    b.Property<int>("raceId")
+                    b.Property<int?>("raceId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("driverId")
+                    b.Property<int?>("driverId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("lap")
@@ -155,10 +152,12 @@ namespace vpsrestapi.Migrations
 
                     b.Property<string>("time")
                         .IsRequired()
-                        .HasMaxLength(15)
+                        .HasMaxLength(8)
                         .HasColumnType("TEXT");
 
                     b.HasKey("raceId", "driverId", "lap");
+
+                    b.HasIndex("driverId");
 
                     b.ToTable("LapTimes");
                 });
@@ -166,34 +165,30 @@ namespace vpsrestapi.Migrations
             modelBuilder.Entity("Models.Race", b =>
                 {
                     b.Property<int>("raceId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("circuitId")
+                    b.Property<int?>("circuitId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("date")
-                        .HasColumnType("date");
+                        .HasColumnType("Date");
 
-                    b.Property<DateTime?>("fp1Date")
-                        .HasColumnType("date");
-
-                    b.Property<string>("fp1Time")
-                        .HasMaxLength(8)
+                    b.Property<string>("fp1_date")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("fp2Date")
-                        .HasColumnType("date");
-
-                    b.Property<string>("fp2Time")
-                        .HasMaxLength(8)
+                    b.Property<string>("fp1_time")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("fp3Date")
-                        .HasColumnType("date");
+                    b.Property<string>("fp2_date")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("fp3Time")
-                        .HasMaxLength(8)
+                    b.Property<string>("fp2_time")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("fp3_date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("fp3_time")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("name")
@@ -201,30 +196,25 @@ namespace vpsrestapi.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("qualiDate")
-                        .HasColumnType("date");
+                    b.Property<string>("quali_date")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("qualiTime")
-                        .HasMaxLength(8)
+                    b.Property<string>("quali_time")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("round")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("sprintDate")
-                        .HasColumnType("date");
+                    b.Property<string>("sprint_date")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("sprintTime")
-                        .HasMaxLength(8)
+                    b.Property<string>("sprint_time")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("time")
-                        .IsRequired()
-                        .HasMaxLength(8)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("url")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("year")
@@ -232,7 +222,52 @@ namespace vpsrestapi.Migrations
 
                     b.HasKey("raceId");
 
+                    b.HasIndex("circuitId");
+
                     b.ToTable("Races");
+                });
+
+            modelBuilder.Entity("Models.DriverStanding", b =>
+                {
+                    b.HasOne("Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("driverId");
+
+                    b.HasOne("Models.Race", "Race")
+                        .WithMany()
+                        .HasForeignKey("raceId");
+
+                    b.Navigation("Driver");
+
+                    b.Navigation("Race");
+                });
+
+            modelBuilder.Entity("Models.LapTime", b =>
+                {
+                    b.HasOne("Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("driverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Race", "Race")
+                        .WithMany()
+                        .HasForeignKey("raceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Driver");
+
+                    b.Navigation("Race");
+                });
+
+            modelBuilder.Entity("Models.Race", b =>
+                {
+                    b.HasOne("Models.Circuit", "Circuit")
+                        .WithMany()
+                        .HasForeignKey("circuitId");
+
+                    b.Navigation("Circuit");
                 });
 #pragma warning restore 612, 618
         }

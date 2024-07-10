@@ -13,13 +13,21 @@ public class Driver
     [MaxLength(255)]
     public required string driverRef { get; set; }
 
-    [Required]
-    [MaxLength(10)]
-    public required string number { get; set; }
+    [MaxLength(2)]
+    private string? _number;
+    public string? number
+    {
+        get => _number;
+        set => _number = value == @"\N" ? null : value;
+    }
 
-    [Required]
-    [MaxLength(10)]
-    public required string code { get; set; }
+    [MaxLength(3)]
+    private string? _code;
+    public string? code
+    {
+        get => _code;
+        set => _code = value == @"\N" ? null : value;
+    }
 
     [Required]
     [MaxLength(255)]
@@ -30,7 +38,7 @@ public class Driver
     public required string surname { get; set; }
 
     [Required]
-    [Column(TypeName = "date")]
+    [Column(TypeName = "Date")]
     [DataType(DataType.Date)]
     public required DateTime dob { get; set; }
 

@@ -11,19 +11,22 @@ public class DriverStanding
     [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
     public int driverStandingsId { get; set; }
 
+    public Race? Race { get; set; }
     [ForeignKey("Race")]
-    public int raceId { get; set; }
+    public int? raceId { get; set; }
 
-    public int driverId { get; set; }
+    public Driver? Driver { get; set; }
+    [ForeignKey("Driver")]
+    public int? driverId { get; set; }
 
-    public float points { get; set; }
+    public float? points { get; set; }
 
-    public int position { get; set; }
+    public int? position { get; set; }
 
     [JsonConverter(typeof(PositionTextJsonConverter))]
     public string? positionText { get; set; }
 
-    public int wins { get; set; }
+    public int? wins { get; set; }
 }
 
 // PositionText should be a string as defined in the CSV file, but for some reason it is an integer in the JSON file

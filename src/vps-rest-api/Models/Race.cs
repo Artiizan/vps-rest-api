@@ -15,59 +15,106 @@ public class Race
     [Required]
     public int round { get; set; }
 
-    [Required]
+    public Circuit? Circuit { get; set; }
     [ForeignKey("Circuit")]
-    public int circuitId { get; set; }
+    public int? circuitId { get; set; }
 
     [Required]
     [MaxLength(255)]
     public required string name { get; set; }
 
     [Required]
-    [Column(TypeName = "date")]
+    [Column(TypeName = "Date")]
     [DataType(DataType.Date)]
     public DateTime date { get; set; }
 
-    [Required]
     [MaxLength(8)]
-    public required string time { get; set; }
+    private string? _time;
+    public string? time { 
+        get => _time;
+        set => _time = value == @"\N" ? null : value;
+    }
 
-    [Required]
     [Url]
-    public required string url { get; set; }
+    public string? url { get; set; }
 
-    [Column(TypeName = "date")]
-    [DataType(DataType.Date)]
-    public DateTime? fp1Date { get; set; }
-
-    [MaxLength(8)]
-    public string? fp1Time { get; set; }
-
-    [Column(TypeName = "date")]
-    [DataType(DataType.Date)]
-    public DateTime? fp2Date { get; set; }
+    [MaxLength(10)]
+    private string? _fp1_date;
+    public string? fp1_date
+    {
+        get => _fp1_date;
+        set => _fp1_date = value == @"\N" ? null : value;
+    }
 
     [MaxLength(8)]
-    public string? fp2Time { get; set; }
+    private string? _fp1_time;
+    public string? fp1_time
+    {
+        get => _fp1_time;
+        set => _fp1_time = value == @"\N" ? null : value;
+    }
 
-    [Column(TypeName = "date")]
-    [DataType(DataType.Date)]
-    public DateTime? fp3Date { get; set; }
-
-    [MaxLength(8)]
-    public string? fp3Time { get; set; }
-
-    [Column(TypeName = "date")]
-    [DataType(DataType.Date)]
-    public DateTime? qualiDate { get; set; }
-
-    [MaxLength(8)]
-    public string? qualiTime { get; set; }
-
-    [Column(TypeName = "date")]
-    [DataType(DataType.Date)]
-    public DateTime? sprintDate { get; set; }
+    [MaxLength(10)]
+    private string? _fp2_date;
+    public string? fp2_date
+    {
+        get => _fp2_date;
+        set => _fp2_date = value == @"\N" ? null : value;
+    }
 
     [MaxLength(8)]
-    public string? sprintTime { get; set; }
+    private string? _fp2_time;
+    public string? fp2_time
+    {
+        get => _fp2_time;
+        set => _fp2_time = value == @"\N" ? null : value;
+    }
+
+    [MaxLength(10)]
+    private string? _fp3_date;
+    public string? fp3_date
+    {
+        get => _fp3_date;
+        set => _fp3_date = value == @"\N" ? null : value;
+    }
+
+    [MaxLength(8)]
+    private string? _fp3_time;
+    public string? fp3_time
+    {
+        get => _fp3_time;
+        set => _fp3_time = value == @"\N" ? null : value;
+    }
+
+    [MaxLength(10)]
+    private string? _quali_date;
+    public string? quali_date
+    {
+        get => _quali_date;
+        set => _quali_date = value == @"\N" ? null : value;
+    }
+
+    [MaxLength(8)]
+    private string? _quali_time;
+    public string? quali_time
+    {
+        get => _quali_time;
+        set => _quali_time = value == @"\N" ? null : value;
+    }
+
+    [MaxLength(10)]
+    private string? _sprint_date;
+    public string? sprint_date
+    {
+        get => _sprint_date;
+        set => _sprint_date = value == @"\N" ? null : value;
+    }
+
+    [MaxLength(8)]
+    private string? _sprint_time;
+    public string? sprint_time
+    {
+        get => _sprint_time;
+        set => _sprint_time = value == @"\N" ? null : value;
+    }
 }

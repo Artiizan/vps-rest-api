@@ -41,17 +41,17 @@ public class DatabaseSeederService
 
             // Read the files from the dataset directory          
             List<Circuit> circuits = ReadJsonFile<Circuit>("dataset/circuits.json");
-            List<DriverStanding> driverStandings = ReadJsonFile<DriverStanding>("dataset/driver_standings.json");
+            List<Race> races = ReadJsonFile<Race>("dataset/races.json");
             List<Driver> drivers = ReadJsonFile<Driver>("dataset/drivers.json");
             List<LapTime> lapTimes = ReadJsonFile<LapTime>("dataset/lap_times.json");
-            List<Race> races = ReadJsonFile<Race>("dataset/races.json");
+            List<DriverStanding> driverStandings = ReadJsonFile<DriverStanding>("dataset/driver_standings.json");
 
             // Add the data to the database'
             _db.Circuits.AddRange(circuits);
-            _db.DriverStandings.AddRange(driverStandings);
+            _db.Races.AddRange(races);
             _db.Drivers.AddRange(drivers);
             _db.LapTimes.AddRange(lapTimes);
-            _db.Races.AddRange(races);
+            _db.DriverStandings.AddRange(driverStandings);
 
             _db.SaveChanges();
 

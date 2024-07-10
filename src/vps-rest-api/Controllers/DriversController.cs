@@ -12,10 +12,12 @@ namespace Controllers;
 public class DriversController : ControllerBase
 {
     private readonly IDriversService _driversService;
+    private readonly IDriverStandingsService _driverStandingsService;
 
-    public DriversController(IDriversService driversService)
+    public DriversController(IDriversService driversService, IDriverStandingsService driverStandingsService)
     {
         _driversService = driversService;
+        _driverStandingsService = driverStandingsService;
     }
 
     [HttpPost]
@@ -26,6 +28,17 @@ public class DriversController : ControllerBase
     public IResult Upsert([FromBody] Driver[] drivers)
     {
         var result = _driversService.Upsert(drivers);
+        return result;
+    }
+
+    [HttpPost("standings")]
+    [SwaggerOperation(Summary = "Upserts driver standings into the database.", Description = "Provides an endpoint for upserting driver standings into the database.")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DatabaseInteractionResult))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(DatabaseInteractionResult))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IResult Upsert([FromBody] DriverStanding[] driverStandings)
+    {
+        var result = _driverStandingsService.Upsert(driverStandings);
         return result;
     }
 }

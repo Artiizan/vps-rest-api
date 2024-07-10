@@ -33,8 +33,8 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPS - Dataset Parser API v1");
-        c.DocumentTitle = "VPS - Dataset Parser API";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "VPS - REST API v1");
+        c.DocumentTitle = "VPS - REST API";
         c.RoutePrefix = string.Empty; // serve the Swagger UI at the app's root
     });
 
