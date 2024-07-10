@@ -7,7 +7,7 @@ using Persistence;
 
 using Services;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 {
     // dependency injection
 
@@ -19,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
     // api endpoint services
     builder.Services.AddSingleton<DatabaseSeederService>();
+    builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
     builder.Services.AddSingleton<ICircuitsService, CircuitsService>();
     builder.Services.AddSingleton<IDriverStandingsService, DriverStandingsService>();
     builder.Services.AddSingleton<IDriversService, DriversService>();
@@ -26,7 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSingleton<IRacesService, RacesService>();
 }
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 {
     // configure request pipeline
 
@@ -43,8 +44,8 @@ var app = builder.Build();
 
     app.UseExceptionHandler(c => c.Run(async context =>
     {
-        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-        var result = JsonSerializer.Serialize(new { error = exception?.Message });
+        Exception? exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+        string result = JsonSerializer.Serialize(new { error = exception?.Message });
         context.Response.ContentType = "application/json";
         await context.Response.WriteAsync(result);
     }));
@@ -52,11 +53,11 @@ var app = builder.Build();
 }
 
 // Ensure the database is created and migrations are applied
-using (var scope = app.Services.CreateScope())
+using (IServiceScope scope = app.Services.CreateScope())
 {
     try
     {
-        var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+        DatabaseContext db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
         db.Database.EnsureCreated();
         db.Database.Migrate();
     }

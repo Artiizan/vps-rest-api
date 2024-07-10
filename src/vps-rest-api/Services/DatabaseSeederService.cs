@@ -1,16 +1,12 @@
 using System.Text.Json;
 
 using Models;
+
 using Persistence;
 
-public class DatabaseSeederService
+public class DatabaseSeederService(DatabaseContext db)
 {
-    private readonly DatabaseContext _db;
-
-    public DatabaseSeederService(DatabaseContext db)
-    {
-        _db = db;
-    }
+    private readonly DatabaseContext _db = db;
 
     public DatabaseInteractionResult SeedDatabase()
     {

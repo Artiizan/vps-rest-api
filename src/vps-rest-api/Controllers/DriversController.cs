@@ -9,15 +9,27 @@ namespace Controllers;
 
 [ApiController]
 [Route("drivers")]
-public class DriversController : ControllerBase
+public class DriversController(
+    IDriversService driversService, IDriverStandingsService driverStandingsService,
+    IGenericRepository<Driver> driverRepository, IGenericRepository<DriverStanding> driverStandingRepository
+) : ControllerBase
 {
-    private readonly IDriversService _driversService;
-    private readonly IDriverStandingsService _driverStandingsService;
+    private readonly IDriversService _driversService = driversService;
+    private readonly IGenericRepository<Driver> _driverRepository = driverRepository;
+    private readonly IDriverStandingsService _driverStandingsService = driverStandingsService;
+    private readonly IGenericRepository<DriverStanding> _driverStandingRepository = driverStandingRepository;
 
-    public DriversController(IDriversService driversService, IDriverStandingsService driverStandingsService)
+    // Drivers
+
+    [HttpGet]
+    [SwaggerOperation(Summary = "Gets all Drivers from the database.", Description = "Provides an endpoint for retrieving all Drivers from the database.")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Driver[]))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Get([FromQuery] QueryParameters queryParameters)
     {
-        _driversService = driversService;
-        _driverStandingsService = driverStandingsService;
+        PagedResponse<Driver> response =
+            await _driverRepository.GetAsync(queryParameters, $"{Request.Scheme}://{Request.Host}{Request.Path}");
+        return Ok(response);
     }
 
     [HttpPost]
@@ -27,8 +39,25 @@ public class DriversController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IResult Upsert([FromBody] Driver[] drivers)
     {
-        var result = _driversService.Upsert(drivers);
+        IResult result = _driversService.Upsert(drivers);
         return result;
+    }
+
+    // Driver Standings
+
+    [HttpGet("standings")]
+    [SwaggerOperation(Summary = "Get the driver standings information from the database, enriched with related data.", Description = "Provides an endpoint for retrieving driver standings information from the database, enriched with related data.")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DriverStanding[]))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetStandings([FromQuery] QueryParameters queryParameters)
+    {
+        PagedResponse<DriverStanding> response =
+            await _driverStandingRepository.GetAsync(
+                queryParameters,
+                $"{Request.Scheme}://{Request.Host}{Request.Path}",
+                ["Race", "Driver"]
+            );
+        return Ok(response);
     }
 
     [HttpPost("standings")]
@@ -36,9 +65,9 @@ public class DriversController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DatabaseInteractionResult))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(DatabaseInteractionResult))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public IResult Upsert([FromBody] DriverStanding[] driverStandings)
+    public IResult UpsertStandings([FromBody] DriverStanding[] driverStandings)
     {
-        var result = _driverStandingsService.Upsert(driverStandings);
+        IResult result = _driverStandingsService.Upsert(driverStandings);
         return result;
     }
 }

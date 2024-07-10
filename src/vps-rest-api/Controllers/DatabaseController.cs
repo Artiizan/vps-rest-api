@@ -7,14 +7,10 @@ namespace Controllers;
 
 [ApiController]
 [Route("database")]
-public class DatabaseController : ControllerBase
+public class DatabaseController(DatabaseSeederService seederService) : ControllerBase
 {
-    private readonly DatabaseSeederService _seederService;
+    private readonly DatabaseSeederService _seederService = seederService;
 
-    public DatabaseController(DatabaseSeederService seederService)
-    {
-        _seederService = seederService;
-    }
     [HttpGet]
     [SwaggerOperation(Summary = "Seeds the database with the provided test data on the local filesystem.", Description = "Provides an endpoint for seeding the database after initial creation for rapid testing. This is ideal for testing with the full data set as it can be too large to paste into a REST program.")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DatabaseInteractionResult))]
@@ -22,7 +18,7 @@ public class DatabaseController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IResult SeedDatabase()
     {
-        var result = _seederService.SeedDatabase();
+        DatabaseInteractionResult result = _seederService.SeedDatabase();
         return result.Success ? TypedResults.Ok(result) : TypedResults.Json(result, statusCode: 500);
     }
 }

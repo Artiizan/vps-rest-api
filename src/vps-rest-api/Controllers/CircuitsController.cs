@@ -9,13 +9,20 @@ namespace Controllers;
 
 [ApiController]
 [Route("circuits")]
-public class CircuitsController : ControllerBase
+public class CircuitsController(ICircuitsService circuitsService, IGenericRepository<Circuit> circuitRepository) : ControllerBase
 {
-    private readonly ICircuitsService _circuitsService;
+    private readonly ICircuitsService _circuitsService = circuitsService;
+    private readonly IGenericRepository<Circuit> _circuitRepository = circuitRepository;
 
-    public CircuitsController(ICircuitsService circuitsService)
+    [HttpGet]
+    [SwaggerOperation(Summary = "Retrieves specified circuits from the database.", Description = "Provides an endpoint for retrieving all circuits from the database.")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Circuit[]))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Get([FromQuery] QueryParameters queryParameters)
     {
-        _circuitsService = circuitsService;
+        PagedResponse<Circuit> response =
+            await _circuitRepository.GetAsync(queryParameters, $"{Request.Scheme}://{Request.Host}{Request.Path}");
+        return Ok(response);
     }
 
     [HttpPost]
@@ -25,7 +32,7 @@ public class CircuitsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IResult Upsert([FromBody] Circuit[] circuits)
     {
-        var result = _circuitsService.Upsert(circuits);
+        IResult result = _circuitsService.Upsert(circuits);
         return result;
     }
 }
