@@ -35,7 +35,7 @@ These files should contain the data provided in the challenge description.
 1. **Clone the repository** to your local machine.
 2. **Navigate to the project directory** where the `VehiclePerformanceSoftware.sln` file is located.
 3. **Run in VS Code:** you can start the application using the `F5` Key or the Debug button.
-4. **Seed the database** (if necessary on first run) after placing the `dataset` files as described above. Navigate to the Swagger UI at `http://localhost:5000/`. Locate the `GET` request for `/database/seed` and Execute it. This will take a couple of seconds as it Parses and stores the data from the JSON files into our fresh database.
+4. **Seed the database** (if necessary on first run) after placing the `dataset` files as described above. Navigate to the Swagger UI at `http://localhost:5000/`. Locate the `PUT` request for `/database/seed` and Execute it. This will take a couple of seconds as it Parses and stores the data from the JSON files into our fresh database.
 
 ### Accessing the API Documentation
 
