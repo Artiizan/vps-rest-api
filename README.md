@@ -30,14 +30,12 @@ Inside the `dataset` folder, you should include the following JSON files:
 
 These files should contain the data provided in the challenge description. 
 
-Once you have created the `dataset` folder and populated it with the required JSON files, you can proceed with local debugging and making a `GET` request to the endpoint.
-
 ### Running the Project Locally
 
 1. **Clone the repository** to your local machine.
 2. **Navigate to the project directory** where the `VehiclePerformanceSoftware.sln` file is located.
 3. **Run in VS Code:** you can start the application using the `F5` Key or the Debug button.
-4. **Seed the database** (if necessary on first run) by placing the required JSON files in the `dataset` folder as described in the "Seeding" section above.
+4. **Seed the database** (if necessary on first run) after placing the `dataset` files as described above. Navigate to the Swagger UI at `http://localhost:5000/`. Locate the `GET` request for `/database/seed` and Execute it. This will take a couple of seconds as it Parses and stores the data from the JSON files into our fresh database.
 
 ### Accessing the API Documentation
 
