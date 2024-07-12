@@ -16,7 +16,7 @@ public partial class QueryParser
         List<FilterCriteria> criteriaList = [];
 
         // Split the query by & to get individual filters
-        string[] filters = filterQuery.Split('&', StringSplitOptions.RemoveEmptyEntries);
+        string[] filters = filterQuery.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
         foreach (string filter in filters)
         {

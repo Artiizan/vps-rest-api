@@ -39,8 +39,7 @@ public class DriversController(
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IResult Upsert([FromBody] Driver[] drivers)
     {
-        IResult result = _driversService.Upsert(drivers);
-        return result;
+        return _driversService.Upsert(drivers);
     }
 
     // Driver Standings
@@ -67,7 +66,6 @@ public class DriversController(
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IResult UpsertStandings([FromBody] DriverStanding[] driverStandings)
     {
-        IResult result = _driverStandingsService.Upsert(driverStandings);
-        return result;
+        return _driverStandingsService.Upsert(driverStandings);
     }
 }

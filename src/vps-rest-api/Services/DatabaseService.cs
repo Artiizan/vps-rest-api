@@ -4,9 +4,27 @@ using Models;
 
 using Persistence;
 
-public class DatabaseSeederService(DatabaseContext db)
+public interface IDatabaseService
+{
+    DatabaseInteractionResult SeedDatabase();
+    DatabaseMetrics GetMetrics();
+}
+
+public class DatabaseService(DatabaseContext db) : IDatabaseService
 {
     private readonly DatabaseContext _db = db;
+
+    public DatabaseMetrics GetMetrics()
+    {
+        return new DatabaseMetrics
+        {
+            Circuits = _db.Circuits.Count(),
+            Driver_Standings = _db.DriverStandings.Count(),
+            Drivers = _db.Drivers.Count(),
+            Lap_Times = _db.LapTimes.Count(),
+            Races = _db.Races.Count()
+        };
+    }
 
     public DatabaseInteractionResult SeedDatabase()
     {

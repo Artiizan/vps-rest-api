@@ -32,7 +32,6 @@ public class CircuitsController(ICircuitsService circuitsService, IGenericReposi
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IResult Upsert([FromBody] Circuit[] circuits)
     {
-        IResult result = _circuitsService.Upsert(circuits);
-        return result;
+        return _circuitsService.Upsert(circuits);
     }
 }

@@ -43,8 +43,7 @@ public class RacesController(
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IResult Upsert([FromBody] Race[] races)
     {
-        IResult result = _racesService.Upsert(races);
-        return result;
+        return _racesService.Upsert(races);
     }
 
     // LapTimes
@@ -64,6 +63,16 @@ public class RacesController(
         return Ok(response);
     }
 
+    [HttpGet("lapTimes/{driverId}")]
+    [SwaggerOperation(Summary = "Gets the Lap Times statistics for a Driver on every circuit.", Description = "Provides an endpoint for retrieving the average LapTimes for a Driver.")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DriverLapTimes))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IResult GetDriverLapTimes(int driverId, int? year = null)
+    {
+        DriverLapTimes[] driverLapTimes = _lapTimesService.GetDriverLapTimes(driverId, year);
+        return TypedResults.Ok(driverLapTimes);
+    }
+
     [HttpPost("lapTimes")]
     [SwaggerOperation(Summary = "Upserts LapTimes into the database.", Description = "Provides an endpoint for upserting LapTimes into the database.")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DatabaseInteractionResult))]
@@ -71,7 +80,6 @@ public class RacesController(
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IResult Upsert([FromBody] LapTime[] lapTimes)
     {
-        IResult result = _lapTimesService.Upsert(lapTimes);
-        return result;
+        return _lapTimesService.Upsert(lapTimes);
     }
 }

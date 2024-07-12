@@ -18,8 +18,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSingleton<DatabaseContext>();
 
     // api endpoint services
-    builder.Services.AddSingleton<DatabaseSeederService>();
     builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+    builder.Services.AddSingleton<IDatabaseService, DatabaseService>();
     builder.Services.AddSingleton<ICircuitsService, CircuitsService>();
     builder.Services.AddSingleton<IDriverStandingsService, DriverStandingsService>();
     builder.Services.AddSingleton<IDriversService, DriversService>();
