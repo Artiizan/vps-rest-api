@@ -2,27 +2,9 @@
 
 This .NET 8 api is responsible for parsing JSON files, storing the parsed data in a database and then exposing the data through a RESTful API. It allows clients to query, filter, and aggregate data.
 
+![Swagger Docs](screenshot.png)
+
 ## Development Environment
-
-### Dependencies
-
-This project is built using .NET 8 and relies on the following key dependencies:
-
-- **Entity Framework Core** - For ORM support and managing database migrations.
-- **SQLite** - Chosen as the database for development due to its simplicity and ease of setup.
-- **Swashbuckle (Swagger)** - For API documentation and testing purposes.
-
-## What Has Been Built
-
-The Vehicle Performance Software Skills Challenge REST API is designed to parse JSON files related to vehicle performance data, store this data in a SQLite database, and expose the data through a RESTful API. This setup allows for querying, filtering, and aggregating data efficiently.
-
-### Key Features
-
-- **JSON Parsing**: The API includes functionality to parse JSON files containing vehicle performance data, such as circuits, driver standings, drivers, lap times, and races.
-- **Data Storage**: Parsed data is stored in a SQLite database, providing a lightweight yet powerful way to manage data for development purposes.
-- **RESTful API**: The API exposes endpoints for accessing and manipulating the stored data, allowing clients to perform operations like querying for specific data, filtering results, and aggregating data points.
-- **Automatic Database Management**: On startup, the application automatically creates the database (if it doesn't exist) and applies any pending migrations, ensuring the database schema is always up to date.
-- **Data Seeding**: For local debugging and testing, the API supports seeding the database with initial data from provided JSON files, simulating a real-world scenario and making it easier to start working with the API immediately.
 
 ### Development Environment Setup
 
@@ -30,7 +12,7 @@ To set up your development environment for working on this project, you will nee
 
 1. **.NET 8 SDK**: Ensure you have the .NET 8 SDK installed on your machine.
 2. **SQLite**: The project uses SQLite as the development database. No separate installation is required as SQLite is embedded within the application through Entity Framework Core.
-3. **Visual Studio Code or another IDE**: While you can use any IDE or text editor, Visual Studio Code is recommended for its excellent C# and .NET support.
+3. **Visual Studio Code**: While you can use any IDE or text editor, Visual Studio Code is recommended as the launch files have been preconfigured to speed up testing.
 
 ### Database
 
@@ -38,20 +20,50 @@ The database should be automatically created and migrations applied by the `star
 
 #### Seeding
 
-To seed the necessary data for local debugging, you need to create a `dataset` folder in the root of your project directory. Inside the `dataset` folder, you should include the following JSON files: `circuits.json`, `driver_standings.json`, `drivers.json`, `lap_times.json`, and `races.json`. These files should contain the data provided in the challenge description. Once you have created the `dataset` folder and populated it with the required JSON files, you can proceed with local debugging and making a `GET` request to the endpoint.
+To seed the necessary data for local debugging, you need to create a `dataset` folder in the root of your project directory. 
+Inside the `dataset` folder, you should include the following JSON files: 
+- `circuits.json`
+- `driver_standings.json`
+- `drivers.json`
+- `lap_times.json`
+- `races.json`
+
+These files should contain the data provided in the challenge description. 
+
+Once you have created the `dataset` folder and populated it with the required JSON files, you can proceed with local debugging and making a `GET` request to the endpoint.
 
 ### Running the Project Locally
 
 1. **Clone the repository** to your local machine.
 2. **Navigate to the project directory** where the `VehiclePerformanceSoftware.sln` file is located.
-3. **Restore dependencies**: Run `dotnet restore` to restore all the necessary .NET dependencies.
-4. **Start the application**: Run `dotnet run` within the API project directory. This will start the API and automatically apply any pending database migrations.
-5. **Seed the database** (if necessary) by placing the required JSON files in the `dataset` folder as described in the "Seeding" section above.
+3. **Run in VS Code:** you can start the application using the `F5` Key or the Debug button.
+4. **Seed the database** (if necessary on first run) by placing the required JSON files in the `dataset` folder as described in the "Seeding" section above.
 
 ### Accessing the API Documentation
 
-Once the application is running, you can access the Swagger UI to test the API endpoints and view the API documentation by navigating to `http://localhost:<port>/` in your web browser.
+Once the application is running, you can access the Swagger UI to test the API endpoints and view the API documentation by navigating to `http://localhost:5000/` in your web browser.
 
-## Conclusion
+## Unit and Integrations Tests
 
-This REST API provides a robust solution for managing and exposing vehicle performance data, leveraging the power of .NET 8 and SQLite for development. Its design focuses on ease of use, scalability, and flexibility, making it an ideal starting point for developers looking to work with vehicle performance data.
+In the interest of time, I opted to build functionality to solve the requirements as opposed to invest time in writing tests.
+While this is not best practice, I was sticking to the project description of not spending more than a couple of hours on the tasks.
+
+#### What Unit Tests should be
+
+Unit testing would live in a new project: `src/vps-rest-api.UnitTests`. 
+
+Unit tests are designed to test individual units of code, such as methods or functions, in isolation. They help ensure that each unit of code behaves as expected and performs its intended functionality. By writing a test per service, we can thoroughly test the behavior and functionality of each service in our project.
+
+To isolate dependencies, we can use either an `InMemoryDatabase` or `Moq`. 
+An `InMemoryDatabase` would allow us to create a lightweight database that mimics the behavior of a real database.
+
+On the other hand, `Moq` is a mocking framework that allows us to create mock objects for our dependencies. These mock objects simulate the behavior of the real dependencies, allowing us to test our services in isolation without relying on the actual implementation of the dependencies. This would require changes to create virtual Services and manipulate how the database is used.
+
+#### What Integration Tests should be
+
+Integration testing would live in a new project: `src/vps-rest-api.IntegrationTests`. 
+
+Integration tests are closer to an end to end test of the API, as opposed to individual components. We would use a framework that allows us to query the REST API endpoints with sample data.
+
+Unlike unit tests, integration tests should use a real `sandpit` database instead of an in-memory database. This ensures that the tests accurately reflect the behavior of the system in a production-like environment.
+It is thus important to clean up any test data or resources created during the test execution. This ensures that each test starts with a clean state and avoids interference between test cases. As well as not leaving test data in the database.
